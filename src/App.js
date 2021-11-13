@@ -14,7 +14,9 @@ function App() {
     try{
       const result = await fetch(url)
       const data = await result.json()
+      setLoading(false)
       setTours(data)
+      
     }catch(error){
 
     }
@@ -26,17 +28,29 @@ function App() {
       }, [])
 
        const removeTour = (id) =>{
-        tours.filter(tour => tour.id !==id)
+       const newTours = tours.filter(tour => tour.id !==id)
+        setTours(newTours)
   }
       
   if(loading){
     return <Loading/>
   }
- return <>{
-    tours.map((tour) => {
-    return<main> <Tours  tour = {tour} removeTour = {removeTour}/></main> 
-    })
-}    </>
+  if(tours.length == 0){
+    return<main>
+      <div className = "title">
+        <h3>No tours</h3>
+        <button className = "btn" onClick = { () => {
+          fetchTours()
+        }}>refresh</button>
+
+      </div>
+    </main>
+  }
+ return <>
+  <main>
+    <Tours tours = {tours} removeTour = {removeTour}/>
+  </main>
+    </>
 
 }
 
